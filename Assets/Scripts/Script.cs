@@ -6,44 +6,132 @@ using TMPro;
 
 public class Script : MonoBehaviour
 {
-    // public GameObject cube;
-    // public int x, y, z
-    
-    public GameObject scene1, scene2, scene3;
-    public GameObject stats;
-    public TextMeshProUGUI hpValue;
-    public int hpPoints;
+    public GameObject[] Scenes;
+    public GameObject[] Dialogue;
+    public int ActiveScene;
+    public int ActiveDialogue;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        // for scale
-        // cube.transform.localScale = new Vector3(x, y, z);
+    void Start() {
+        Dialogue[0].SetActive(false);
 
-        // for position
-        // cube.transform.localPosition = new Vector3(x, y, z);
-
-        scene1.SetActive(true);
-        stats.SetActive(false);
+        Scenes[0].SetActive(true);
+        SaveChanges();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        hpValue.text = hpPoints.ToString();
+    void Update() {
+
+    }
+
+    public void NextDialogue() {
+        ActiveDialogue++;
+        SaveChanges();
+    }
+
+    public void NextScene() {
+        ActiveScene++;
+        ActiveDialogue++;
+        SaveChanges();
+    }
+
+    public void SkipScene() {
+        ActiveScene += 2;
+        SaveChanges();
+    }
+
+    public void SkipDialogue() {
+        ActiveDialogue += 2;
+        SaveChanges();
+    }
+
+    public void SaveChanges() {
+        for (int i = 0; i < Scenes.Length; i++)
+        {
+            Scenes[i].SetActive(i == ActiveScene);
+        }
+
+        for (int i = 0; i < Dialogue.Length; i++)
+        {
+            Dialogue[i].SetActive(i == ActiveDialogue);
+        }
     }
 
     public void StartButton() {
-        scene1.SetActive(false);
-        scene2.SetActive(true);
-        stats.SetActive(true);
+        Dialogue[0].SetActive(true);
+
+        ActiveScene = 1;
+        SaveChanges();
     }
 
-    public void WakeUpButton() {
-        scene2.SetActive(false);
-        scene3.SetActive(true);
-
-        hpPoints += 5;
+    public void GetInButton()
+    {
+        ActiveScene = 3;
+        ActiveDialogue = 4;
+        SaveChanges();
     }
 
+    public void WalkHomeButton()
+    {
+        ActiveDialogue = 5;
+        SaveChanges();
+    }
+
+    public void GoToGarage()
+    {
+        ActiveDialogue = 12;
+        SaveChanges();
+    }
+
+    public void ApologizeButton() {
+        NextDialogue();
+    }
+
+    public void StaySilentButton() {
+        ActiveScene = 4;
+        ActiveDialogue = 12;
+        SaveChanges();
+    }
+
+    public void GoInButton() {
+        ActiveScene = 5;
+        ActiveDialogue = 15;
+        SaveChanges();
+    }
+
+    public void RunAwayButton() {
+        ActiveDialogue = 22;
+        BadEnding();
+    }
+
+    public void SitButton() {
+        NextDialogue();
+        GoodEnding();
+    }
+
+    public void GoToRoomButton() {
+        ActiveDialogue = 26;
+        BadEnding();
+    }
+
+    public void GoodEnding()
+    {
+        ActiveScene = 6;
+        ActiveDialogue = 17;
+        SaveChanges();
+    }
+
+    public void BadEnding()
+    {
+        ActiveScene = 7;
+        SaveChanges();
+    }
+
+    public void BadEndingText()
+    {
+        ActiveDialogue = 32;
+        SaveChanges();
+    }
+
+    public void Leave() {
+        Application.Quit();
+    }
 }
